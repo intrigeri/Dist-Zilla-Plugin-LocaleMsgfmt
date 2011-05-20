@@ -1,1 +1,14 @@
+# dist::zilla generated and utility files
+.build
+
+# temp and backup files.
+*~
+*#
+*.bak
+*.old
+*.rej
+*.swp
+*.tmp
+
+# archives of this distribution
 Dist-Zilla-Plugin-LocaleMsgfmt-*
