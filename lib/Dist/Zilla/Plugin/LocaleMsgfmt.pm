@@ -18,7 +18,7 @@ the build dir.
 
 =cut
 
-use Locale::Msgfmt;
+use Locale::Msgfmt 0.14;
 use Moose;
 with 'Dist::Zilla::Role::BeforeBuild';
 
