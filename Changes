@@ -1,6 +1,7 @@
 Revision history for {{ $dist->name }}
 
 {{ $NEXT }}
+    * fix issue#1 - support for recursive directory lookup (jérôme quelin)
     * added test suite (jérôme quelin)
 
 1.202     2010-11-05 23:47:26 America/New_York

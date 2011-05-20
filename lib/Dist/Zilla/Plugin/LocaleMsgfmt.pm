@@ -3,6 +3,7 @@ package Dist::Zilla::Plugin::LocaleMsgfmt;
 
 use Locale::Msgfmt 0.14;
 use Moose;
+use MooseX::Has::Sugar;
 use Path::Class;
 
 with 'Dist::Zilla::Role::BeforeBuild';
@@ -14,16 +15,21 @@ with 'Dist::Zilla::Role::BeforeBuild';
 # be stored in an arrayref
 sub mvp_multivalue_args { qw(locale) }
 
+
+=attr recursive
+
+Whether to look up in the locale files recursively.
+
 =attr locale
 
 Path to the directory containing the locale files.
 
 =cut
 
+has recursive => ( ro, isa=>'Bool', default=>1 );
 has locale => (
-    is      => 'ro',
+    ro, lazy, auto_deref,
     isa     => 'ArrayRef[Str]',
-    lazy    => 1,
     default => sub {
         my $self = shift;
         my $path = dir( $self->zilla->root, 'share', 'locale' );
@@ -39,14 +45,30 @@ has locale => (
 sub before_build {
     my ( $self, $args ) = @_;
 
-    for my $dir ( @{ $self->locale } ) {
+    for my $dir ( $self->locale ) {
         my $path = dir($dir);
-        if ( -e $path ) {
-            $self->log("Generating .mo files from .po files in $path");
-            msgfmt( { in => $path->absolute, verbose => 1, remove => 0 } );
-        }
-        else {
+        if ( ! -e $path ) {
             warn "Skipping invalid path: $path";
+            next;
+        }
+
+        # find directories if recursive behaviour wanted
+        my @pathes;
+        if ( $self->recursive ) {
+            $path->recurse(
+                callback => sub {
+                    my $p = shift;
+                    push @pathes, $p if -d $p;
+                }
+            );
+        } else {
+            push @pathes, $path;
+        }
+
+        # generating mo files
+        foreach my $p ( @pathes ) {
+            $self->log("Generating .mo files from .po files in $p");
+            msgfmt( { in => $p->absolute, verbose => 1, remove => 0 } );
         }
     }
 }
