@@ -17,14 +17,14 @@ my $tzil = Dist::Zilla::Tester->from_config({
 
 warning_like { $tzil->build } qr/^Skipping invalid path:/, "invalid path gives warning";
 
-my $share = $tzil->root->subdir( "share" );
-file_exists_ok( $share->file( "locale1", "basic.mo" ), "1st dir" );
-file_exists_ok( $share->file( "locale2", "basic.mo" ), "2nd dir" );
+my $share = $tzil->root->child( "share" );
+file_exists_ok( $share->child( "locale1", "basic.mo" ), "1st dir" );
+file_exists_ok( $share->child( "locale2", "basic.mo" ), "2nd dir" );
 
 # recursive
-file_exists_ok( $share->file( "locale1", "a", "a", "basic.mo" ), "recurse" );
-file_exists_ok( $share->file( "locale1", "a", "b", "basic.mo" ), "recurse" );
-file_exists_ok( $share->file( "locale1", "b", "a", "basic.mo" ), "recurse" );
-file_exists_ok( $share->file( "locale1", "b", "b", "basic.mo" ), "recurse" );
-file_exists_ok( $share->file( "locale1", "b",      "basic.mo" ), "recurse" );
+file_exists_ok( $share->child( "locale1", "a", "a", "basic.mo" ), "recurse" );
+file_exists_ok( $share->child( "locale1", "a", "b", "basic.mo" ), "recurse" );
+file_exists_ok( $share->child( "locale1", "b", "a", "basic.mo" ), "recurse" );
+file_exists_ok( $share->child( "locale1", "b", "b", "basic.mo" ), "recurse" );
+file_exists_ok( $share->child( "locale1", "b",      "basic.mo" ), "recurse" );
 
